@@ -111,16 +111,14 @@ export default function Home() {
 							{skeleton.map((value, index) => {
 								return (
 									<div className="xs:w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/5 mt-4 mb-4 ml-0 mr-0 flex justify-center">
-										<Link href={"/"}>
-											<Card
-												width="250px"
-												height="250px"
-												style={{ backgroundColor: "#0E1F40" }}
-												key={index}
-											>
-												<Text style={{ color: "#F2F2F2" }}>Loading...</Text>
-											</Card>
-										</Link>
+										<Card
+											width="250px"
+											height="250px"
+											style={{ backgroundColor: "#0E1F40" }}
+											key={index}
+										>
+											<Text style={{ color: "#F2F2F2" }}>Loading...</Text>
+										</Card>
 									</div>
 								);
 							})}
