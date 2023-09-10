@@ -1,10 +1,6 @@
 // firebase.js
 import { initializeApp } from "firebase/app";
-import {
-	getAuth,
-	setPersistence,
-	browserLocalPersistence,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 //Firebase config
@@ -26,5 +22,5 @@ export const initFirebase = () => {
 
 const auth = getAuth(app);
 const firestore = getFirestore(app);
-setPersistence(auth, browserLocalPersistence);
+
 export { auth, firestore };
