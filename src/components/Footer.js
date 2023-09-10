@@ -7,7 +7,7 @@ const Footer = () => {
 			<p className="text-[#F2F2F2] ml-4">&copy;2023 POKEDEX</p>
 			<Tooltip text={"Click to go to the source code on Github"}>
 				<p className="text-[#F2F2F2] mr-4">
-					<a href="">By Bryan Austin</a>
+					<a href="https://github.com/BryanTian28/PokedexFinfolk">By Bryan Austin</a>
 				</p>
 			</Tooltip>
 		</footer>
