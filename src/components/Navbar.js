@@ -37,6 +37,9 @@ const Navbar = () => {
 							<li className="flex align-middle justify-center items-center">
 								<p>Hello, {user.displayName}</p>
 							</li>
+							<li className="mx-4">
+								<Link>My Favorites</Link>
+							</li>
 							<li className="mx-3 border px-4 py-3 rounded-lg">
 								<button onClick={() => auth.signOut()}>Sign out</button>
 							</li>
