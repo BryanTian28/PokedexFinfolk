@@ -1,0 +1,27 @@
+{
+  "name": "pokedex-fav",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.8.3",
+    "@geist-ui/core": "^2.3.8",
+    "@geist-ui/icons": "^1.0.2",
+    "autoprefixer": "10.4.15",
+    "encoding": "^0.1.13",
+    "firebase": "^10.3.1",
+    "graphql": "^16.8.0",
+    "next": "13.4.19",
+    "postcss": "8.4.29",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-firebase-hooks": "^5.1.1",
+    "react-hot-toast": "^2.4.1",
+    "tailwindcss": "3.3.3"
+  }
+}
