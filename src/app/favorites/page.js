@@ -11,46 +11,18 @@ import {
 	query,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { gql, useQuery } from "@apollo/client";
-import client from "@/apolloClient";
 import { Card, Text, Divider, Image } from "@geist-ui/core";
 import Link from "next/link";
-
-const GET_FAVORITES = gql`
-	query GetPokemon($number: Int!) {
-		getPokemonByDexNumber(number: $number) {
-			species
-			num
-			sprite
-		}
-	}
-`;
-
 import toast, { Toaster } from "react-hot-toast";
 
 export default function FavPage() {
 	const [favs, setFavs] = useState();
-	const [finalData, setFinalData] = useState();
 	const [user, loading, error] = useAuthState(auth); //firebase hook to listen for state change in logged in user
 	const [skeleton, setSkeleton] = useState([1, 1, 1, 1, 1]);
 
-	useEffect(() => {
-		if (user) {
-			// Fetch data when there is a user logged in
-			getFavoritesData(user.uid)
-				.then((userData) => {
-					setFavs(userData);
-					console.log(favs);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-		}
-	}, [user]);
-
 	const getFavoritesData = async (uid) => {
 		try {
-			const collectionRef = collection(firestore, "fav"); // Replace with your Firestore instance and collection name
+			const collectionRef = collection(firestore, "fav");
 			const q = query(collectionRef, where("user", "==", uid));
 			const querySnapshot = await getDocs(q);
 
@@ -64,18 +36,40 @@ export default function FavPage() {
 
 	const removeFavorite = async (num) => {
 		try {
-			const collectionRef = collection(firestore, "fav"); // Replace with your Firestore instance and collection name
+			const collectionRef = collection(firestore, "fav");
 			const q = query(
 				collectionRef,
-				where("user", "==", uid),
+				where("user", "==", user?.uid),
 				where("num", "==", num)
 			);
-			const snapshot = await deleteDoc(q);
-			console.log(snapshot);
+
+			const snapshot = await getDocs(q);
+			const toDelete = snapshot.docs[0];
+			await deleteDoc(toDelete.ref);
+			toast("Pokemon removed from favorites");
+			getFavoritesData(user.uid)
+				.then((userData) => {
+					setFavs(userData);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		} catch (error) {
 			console.log(error);
 		}
 	};
+	useEffect(() => {
+		if (user) {
+			// Fetch data when there is a user logged in
+			getFavoritesData(user.uid)
+				.then((userData) => {
+					setFavs(userData);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+	}, [user]);
 
 	return (
 		<div className="min-w-screen min-h-screen bg-[#F2F2F2] flex justify-center">
@@ -118,24 +112,30 @@ export default function FavPage() {
 										<div className="xs:w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/5 mt-4 mb-4 ml-0 mr-0 flex justify-center">
 											{/* Render those with details page */}
 
-											<Link href={`/details/[num]`} as={`/details/${value.num}`}>
-												<Card
-													width="250px"
-													height="250px"
-													style={{ backgroundColor: "#0E1F40" }}
-												>
+											<Card
+												width="250px"
+												height="250px"
+												style={{ backgroundColor: "#0E1F40" }}
+											>
+												<Link href={`/details/[num]`} as={`/details/${value.num}`}>
 													<Image
 														src={value.sprite}
 														alt="Image Not Available"
 														height="150px"
 														style={{ color: "#F2F2F2" }}
 													/>
-													<Divider type="success" />
-													<Text style={{ color: "#F2F2F2" }}>
-														{value.species.toUpperCase()}
-													</Text>
-												</Card>
-											</Link>
+												</Link>
+												<Divider type="success" />
+												<Text style={{ color: "#F2F2F2" }}>
+													{value.species.toUpperCase()}
+												</Text>
+												<button
+													className="bg-red-400 border border-white px-2 rounded-md mt-2"
+													onClick={() => removeFavorite(value.num)}
+												>
+													Remove
+												</button>
+											</Card>
 										</div>
 									);
 								})}

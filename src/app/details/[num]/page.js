@@ -111,7 +111,7 @@ export default function DetailsNum({ params }) {
 				);
 
 				if (snapshot.size > 0) {
-					toast("Pokemon already registered in your favorites");
+					toast("This pokemon already registered in your favorites");
 				} else {
 					const docRef = await addDoc(collectionRef, dataToBeAdded);
 					toast("Pokemon added to your favorites");
@@ -212,8 +212,11 @@ export default function DetailsNum({ params }) {
 									>
 										{detail.species.toUpperCase()}
 										<Tooltip text="Click to favorite this pokemon">
-											<button className="border ml-2" onClick={() => addDataToFirestore()}>
-												<Star size={"20px"} />
+											<button
+												className="border ml-2 border-yellow-900"
+												onClick={() => addDataToFirestore()}
+											>
+												<Star size={"20px"} color="green" />
 											</button>
 										</Tooltip>
 									</Text>
