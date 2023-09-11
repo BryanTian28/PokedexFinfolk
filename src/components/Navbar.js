@@ -1,10 +1,15 @@
 // components/Navbar.js
+"use client";
 import Link from "next/link";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { initFirebase } from "@/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Tooltip } from "@geist-ui/core";
+import { collection, getDocs, where, query } from "firebase/firestore";
+import { firestore } from "@/firebase";
+import { useEffect, useState } from "react";
 const Navbar = () => {
+	const [size, setSize] = useState(0);
 	//Firebase Google setup
 	const auth = getAuth();
 	const [user, loading] = useAuthState(auth);
@@ -14,6 +19,23 @@ const Navbar = () => {
 	const signInWithGoogle = async () => {
 		await signInWithPopup(auth, provider);
 	};
+
+	const getCollectionSize = async () => {
+		try {
+			if (user) {
+				const collectionRef = collection(firestore, "fav");
+				const q = query(collectionRef, where("user", "==", user?.uid));
+				const querySnapshot = await getDocs(q);
+				setSize(querySnapshot.size);
+			}
+		} catch (error) {
+			throw error;
+		}
+	};
+
+	useEffect(() => {
+		getCollectionSize();
+	}, [user]);
 
 	return (
 		<nav className="bg-[#0E1F40] h-20 flex align-middle items-center justify-between min-w-[1600px]">
@@ -38,7 +60,7 @@ const Navbar = () => {
 								<p>Hello, {user.displayName}</p>
 							</li>
 							<li className="mx-4 flex justify-center items-center border px-2 rounded-md">
-								<Link href={"/favorites"}>My Favorites</Link>
+								<Link href={"/favorites"}>My Favorites ({size})</Link>
 							</li>
 							<li className="mx-3 border px-4 py-3 rounded-lg">
 								<button onClick={() => auth.signOut()}>Sign out</button>
